@@ -1,0 +1,47 @@
+version: '3'
+
+services:
+  stream_graphiti:
+    # tty: true
+    container_name: stream_graphiti
+    build: .
+    command: ./run.sh
+    # depends_on:
+    #   - zookeeper
+    #   - kafka
+    #   - schema-registry
+    environment:
+      - WORKER=sg1
+      - WORKER_PORT=6066
+      - KAFKA_BOOTSTRAP_SERVER=broker:29092 # kafka://kafka:9092 # LOCAL&DEV: "localhost:9092" 
+      - KAFKA_BOOSTRAP_SERVER_NAME=broker   # kafka
+      - KAFKA_BOOSTRAP_SERVER_PORT=29092    # 9092
+      - KAFKA_SINKED_TOPIC=inlake-gateway
+      - SCHEMA_REGISTRY_URL=http://schema_registry:8081 # "http://localhost:8081"
+      - SCHEMA_REGISTRY_SERVER=schema_registry
+      - SCHEMA_REGISTRY_SERVER_PORT=8081
+      # - SPARQL_SERVER_NAME=oxigraph                         # OXIGRAPH
+      # - SPARQL_SERVER_PORT=7878                             # OXIGRAPH
+      # - SPARQL_ENDPOINT_QUERY=http://oxigraph:7878/query    # OXIGRAPH
+      # - SPARQL_ENDPOINT_UPDATE=http://oxigraph:7878/update  # OXIGRAPH
+      - SPARQL_SERVER_NAME=graphdb2                           # GRAPHDB
+      - SPARQL_SERVER_PORT=7200                               # GRAPHDB
+      - SPARQL_ENDPOINT_QUERY=http://graphdb2:7200/repositories/astra1             # GRAPHDB
+      - SPARQL_ENDPOINT_UPDATE=http://graphdb2:7200/repositories/astra1/statements # GRAPHDB
+      - SPARQL_DEFAULT_NAMED_GRAPH_ROOT_URI=http://astragale.map.cnrs.fr/triples/
+      - SPARQL_DEFAULT_NAMED_GRAPH_DESTINATION=test_graph
+      - SPARQL_DEFAULT_ROOT_URI=http://example.org/
+      # endpoint.query=http://localhost:7200/repositories/astra1
+      # endpoint.update=http://localhost:7200/repositories/astra1/statements
+    ports:
+      - "8084:80"
+      - "8000:8000"
+    volumes:
+      - ./config_streamgraphiti-kibos.cfg:/code/config_streamgraphiti.cfg
+      - ./sparql_templates:/code/sparql_templates
+    networks:
+      - astraglob
+
+networks:
+  astraglob:
+    name: astraglob

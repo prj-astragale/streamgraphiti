@@ -2,6 +2,8 @@
 
 `StreamGraphiti` is a template-based stream processor for dynamically updating a *RDF Triplestore*.
 
+*Streamgraphiti is part of the [Astragale](https://github.com/prj-astragale) project* 
+
 ## Features
 + An [Apache Kafka](https://kafka.apache.org/) RDF sink,
 + Compliant with the SPARQL Store Protocol,
